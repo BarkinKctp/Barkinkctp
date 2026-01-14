@@ -10,15 +10,36 @@
 
 ---
 
-🌐 **Socials**  
-- LinkedIn: https://www.linkedin.com/in/barkin-kocatepe-6a43922a2  
+🧰 **Languages & Tools**
+
+<p align="left">
+  <!-- Programming & Data -->
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" height="32" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" height="32" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="32" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" height="32" />
+
+  <!-- Cloud & Infrastructure -->
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" height="32" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" height="32" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="32" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" height="32" />
+
+  <!-- Tools & Platforms -->
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" height="32" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" height="32" />
+</p>
 
 ---
 
-🧰 **Languages & Tools**  
-- **Programming & Data:** C/C++, Python, SQL, modern web frameworks  
-- **Cloud & Infrastructure:** Azure & AWS, containers, orchestration, virtualization  
-- **Tools & Platforms:** Git, Linux, Docker, CI/CD pipelines, relational databases  
+🌐 **Socials**
+
+<p align="left">
+  <a href="https://www.linkedin.com/in/barkin-kocatepe-6a43922a2" target="_blank">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" height="32" />
+  </a>
+</p>
+
 
 <!--
 **BarkinKctp/Barkinkctp** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
