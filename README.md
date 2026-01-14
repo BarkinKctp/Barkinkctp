@@ -1,5 +1,18 @@
-## Hi there 👋
+## Hi there 👋 👋 I'm Barkın Kocatepe
 
+Software Engineer | Cloud & Systems oriented 
+
+💡 About Me  
+🔭 Currently working on cloud-oriented systems, packaging, and build workflows  
+💬 Ask me about Azure, cloud-native development, CI/CD, and software packaging  
+
+Socials
+LinkedIn: https://www.linkedin.com/in/barkin-kocatepe-6a43922a2  
+
+🧰 Languages & Tools  
+Programming & Data: C/C++, Python, SQL, modern web frameworks  
+Cloud & Infrastructure: Azure & AWS, containers, orchestration, virtualization  
+Tools & Platforms: Git, Linux, Docker, CI/CD pipelines, relational databases  
 <!--
 **BarkinKctp/Barkinkctp** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
