@@ -4,13 +4,13 @@
 
 ---
 
-💡 **About Me**  
-- 🔭 Currently working on cloud-oriented systems, packaging, and build workflows  
-- 💬 Ask me about Azure, cloud-native development, CI/CD, and software packaging  
+**About Me**  
+-  Currently working on cloud-oriented systems, packaging, and build workflows  
+-  Ask me about Azure, cloud-native development, CI/CD, and software packaging  
 
 ---
 
-🧰 **Languages & Tools**
+**Languages & Tools**
 
 <p align="left">
   <!-- Programming & Data -->
@@ -21,7 +21,7 @@
 
   <!-- Cloud & Infrastructure -->
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" height="32"/>
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" height="32"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" height="32"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="32"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" height="32"/>
 
