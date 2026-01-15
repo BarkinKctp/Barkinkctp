@@ -33,13 +33,18 @@
 
 ---
 
-🌐 **Socials**
+🌐 <strong>Socials</strong>
 
 <p align="left">
   <a href="https://www.linkedin.com/in/barkin-kocatepe-6a43922a2" target="_blank">
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" height="32" />
   </a>
+  &nbsp;&nbsp;
+  <a href="https://learn.microsoft.com/en-us/users/barknkocatepe-1367/" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" height="32" />
+  </a>
 </p>
+
 
 
 <!--
