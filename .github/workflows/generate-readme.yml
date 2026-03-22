@@ -2,7 +2,7 @@ name: Generate terminal GIF
 
 on:
   schedule:
-    - cron: "0 10 * * *" 
+    - cron: "0 10 * * *"
   workflow_dispatch:
   push:
     branches:
@@ -24,20 +24,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install FFmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install dependencies
+        run: pip install requests Pillow
 
-      - name: Install github-readme-terminal
-        run: pip install github-readme-terminal
-
-      - name: Configure gifos
-        run: |
-          mkdir -p ~/.config/gifos
-          cat > ~/.config/gifos/gifos_settings.toml << 'EOF'
-          [general]
-          user_name = "Barkin@dev"
-          color_scheme = "nord"
-          EOF
+      - name: Install fonts
+        run: sudo apt-get update && sudo apt-get install -y fonts-dejavu-core
 
       - name: Generate terminal GIF
         env:

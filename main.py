@@ -3,48 +3,81 @@ from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 import requests
-import gifos
+from PIL import Image, ImageDraw, ImageFont
 
+# ── Config ────────────────────────────────────────────────────────────────────
+USERNAME = "BarkinKctp"
 START_YEAR = 2024
-FONT_FILE_BITMAP = os.path.join(
-    os.path.dirname(gifos.__file__), "fonts", "gohufont-uni-14.pil"
-)
+FPS = 15
+W, H       = 620, 480
+XPAD, YPAD = 16, 38
+LINE_H     = 16
+FONT_SIZE = 13
+
+BG        = "#0d1117"
+BORDER    = "#30363d"
+PROMPT_C  = "#58a6ff"   # blue
+DIM_C     = "#8b949e"   # gray
+GREEN_C   = "#3fb950"   # green
+YELLOW_C  = "#e3b341"   # yellow
+LABEL_C   = "#58a6ff"   # blue
+VALUE_C   = "#e6edf3"   # white
+SEP_C     = "#30363d"   # dark gray
+RED_C     = "#ff5f57"
+ORANGE_C  = "#febc2e"
+DOT_G     = "#28c840"
 
 
-def fetch_streaks(username: str, token: str) -> tuple[int, int]:
-    # Return (current_streak, longest_streak) from GitHub 
-    query = """
-    query($login: String!) {
-      user(login: $login) {
-        contributionsCollection {
-          contributionCalendar {
-            weeks {
-              contributionDays {
-                contributionCount
-                date
-              }
-            }
-          }
-        }
-      }
-    }
-    """
-    resp = requests.post(
+# GitHub stats
+def fetch_json(method: str, url: str, **kwargs) -> dict | list:
+    response = requests.request(method, url, timeout=15, **kwargs)
+    response.raise_for_status()
+    return response.json()
+
+
+def fetch_stats(token: str, current_year: int) -> dict:
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"}
+
+    repos = fetch_json(
+        "GET",
+        f"https://api.github.com/users/{USERNAME}/repos?per_page=100&type=owner",
+        headers=headers,
+    )
+
+    _exclude = {"CSS", "Jupyter Notebook", "TypeScript", "HTML", "Makefile"}
+    lang_bytes: dict[str, int] = {}
+    for repo in repos:
+        if not isinstance(repo, dict) or repo.get("fork"):
+            continue
+        lang = repo.get("language")
+        if lang and lang not in _exclude:
+            lang_bytes[lang] = lang_bytes.get(lang, 0) + (repo.get("size") or 0)
+    top_langs = ", ".join(sorted(lang_bytes, key=lambda l: lang_bytes[l], reverse=True)[:5]) or "N/A"
+
+    commit_year = current_year - 1
+    commits_resp = fetch_json(
+        "GET",
+        f"https://api.github.com/search/commits?q=author:{USERNAME}+author-date:{commit_year}-01-01..{commit_year}-12-31&per_page=1",
+        headers={**headers, "Accept": "application/vnd.github.cloak-preview+json"},
+    )
+    last_year_commits = commits_resp.get("total_count", 0)
+
+    gql = fetch_json(
+        "POST",
         "https://api.github.com/graphql",
-        json={"query": query, "variables": {"login": username}},
+        json={
+            "query": """query($login:String!){user(login:$login){contributionsCollection{contributionCalendar{totalContributions weeks{contributionDays{contributionCount date}}}}}}""",
+            "variables": {"login": USERNAME},
+        },
         headers={"Authorization": f"Bearer {token}"},
-        timeout=15,
     )
-    resp.raise_for_status()
+    if "errors" in gql:
+        raise ValueError(gql["errors"])
 
-    data = resp.json()["data"]["user"]["contributionsCollection"]["contributionCalendar"]
-    days = sorted(
-        [day for week in data["weeks"] for day in week["contributionDays"]],
-        key=lambda d: d["date"],
-    )
+    cal = gql["data"]["user"]["contributionsCollection"]["contributionCalendar"]
+    days = sorted([d for w in cal["weeks"] for d in w["contributionDays"]], key=lambda d: d["date"])
     today = date.today()
 
-    # Current streak 
     current = 0
     for day in reversed(days):
         d = date.fromisoformat(day["date"])
@@ -55,7 +88,7 @@ def fetch_streaks(username: str, token: str) -> tuple[int, int]:
         elif d != today:
             break
 
-    longest, running = 0, 0
+    longest = running = 0
     for day in days:
         d = date.fromisoformat(day["date"])
         if d > today:
@@ -66,96 +99,272 @@ def fetch_streaks(username: str, token: str) -> tuple[int, int]:
         else:
             running = 0
 
-    return current, longest
+    return {
+        "top_langs": top_langs,
+        "last_year_commits": last_year_commits,
+        "commit_year": commit_year,
+        "total_contribs": cal["totalContributions"],
+        "current_streak": current,
+        "longest_streak": longest,
+    }
 
+
+# Helpers
+def load_font(size=FONT_SIZE):
+    try:
+        return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", size)
+    except Exception:
+        return ImageFont.load_default()
+
+def load_font_bold(size=FONT_SIZE):
+    try:
+        return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf", size)
+    except Exception:
+        return load_font(size)
+
+def new_frame(font, font_bold):
+    img  = Image.new("RGB", (W, H), BG)
+    draw = ImageDraw.Draw(img)
+    # Border
+    draw.rounded_rectangle([0, 0, W-1, H-1], radius=8, outline=BORDER)
+    # Title bar dots
+    draw.ellipse([12, 10, 22, 20], fill=RED_C)
+    draw.ellipse([28, 10, 38, 20], fill=ORANGE_C)
+    draw.ellipse([44, 10, 54, 20], fill=DOT_G)
+    # Title bar separator
+    draw.line([(0, 28), (W, 28)], fill=BORDER)
+    return img, draw
+
+def row_y(row):
+    """Convert 1-based row number to y pixel position."""
+    return YPAD + (row - 1) * LINE_H
+
+def draw_prompt(draw, row, font, font_bold):
+    y = row_y(row)
+    draw.text((XPAD, y),      "Barkin@dev", font=font_bold, fill=PROMPT_C)
+    draw.text((XPAD + 76, y), ":~$",        font=font,      fill=DIM_C)
+
+def draw_cursor(draw, row, col_offset=0):
+    y  = row_y(row)
+    x  = XPAD + 100 + col_offset
+    draw.rectangle([x, y+1, x+7, y+LINE_H-2], fill=PROMPT_C)
+
+
+# Frame builder
+def build_frames(stats: dict, years_exp: int):
+    font = load_font()
+    font_bold = load_font_bold()
+    frames = []
+
+    def snapshot(hold_frames=1):
+        """Return `hold_frames` copies of the current image."""
+        return [img.copy() for _ in range(hold_frames)]
+
+    HOLD = 8   # frames to hold a stable line (~0.5s at 15fps)
+    TYPE = 2   # frames per typed character
+
+    # Precompute neofetch lines as (row_offset, segments) tuples
+    # Each segment: (text, color, bold)
+    neofetch = [
+        # separator
+        [(f"{'─'*42}", SEP_C, False)],
+        # header
+        [("Barkinkctp", LABEL_C, True), ("@", DIM_C, False), ("github", LABEL_C, True)],
+        # sep2
+        [("─"*14, SEP_C, False)],
+        # info
+        [("Role:   ", LABEL_C, True), ("Engineer - DevOps / Cloud", VALUE_C, False)],
+        [("Focus:  ", LABEL_C, True), ("Platform automation · CI/CD · IaC", VALUE_C, False)],
+        [("Stack:  ", LABEL_C, True), ("Cloud · K8s · Docker · Terraform", VALUE_C, False)],
+        [("Exp:    ", LABEL_C, True), (f"{years_exp}+ years", VALUE_C, False)],
+        [("", VALUE_C, False)],
+        # stats sep
+        [("─"*14, SEP_C, False)],
+        [("GitHub Stats:", LABEL_C, True)],
+        [("─"*14, SEP_C, False)],
+        [("Contributions:  ", LABEL_C, True), (str(stats["total_contribs"]), VALUE_C, False)],
+        [("Commits:        ", LABEL_C, True), (str(stats["last_year_commits"]), VALUE_C, False), (f" ({stats['commit_year']})", DIM_C, False)],
+        [("Streak:         ", LABEL_C, True), (f"{stats['current_streak']}d", VALUE_C, False),
+         ("  |  Longest: ",  DIM_C,   False), (f"{stats['longest_streak']}d", VALUE_C, False)],
+        [("Languages:      ", LABEL_C, True), (stats["top_langs"], VALUE_C, False)],
+        # contact sep
+        [("─"*14, SEP_C, False)],
+        [("Contact Me:", LABEL_C, True)],
+        [("", VALUE_C, False)],
+        [("─"*14, SEP_C, False)],
+        [("LinkedIn:  ", LABEL_C, True), ("Barkin-Kocatepe", VALUE_C, False)],
+        [("Email:     ", LABEL_C, True), ("barkinkocatepe12@gmail.com", VALUE_C, False)],
+    ]
+
+    # ── Phase 1: echo
+    img, draw = new_frame(font, font_bold)
+    draw_prompt(draw, 1, font, font_bold)
+    frames += snapshot(HOLD)
+
+    echo_cmd = 'echo "Hi, I\'m Barkin Kocatepe"'
+    typed = ""
+    for ch in echo_cmd:
+        typed += ch
+        img, draw = new_frame(font, font_bold)
+        draw_prompt(draw, 1, font, font_bold)
+        draw.text((XPAD+100, row_y(1)), typed, font=font, fill=GREEN_C)
+        draw_cursor(draw, 1, col_offset=int(font.getlength(typed)))
+        frames += snapshot(TYPE)
+
+    # Hold echo command
+    img, draw = new_frame(font, font_bold)
+    draw_prompt(draw, 1, font, font_bold)
+    draw.text((XPAD+100, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
+    frames += snapshot(HOLD)
+
+    # Show echo output
+    img, draw = new_frame(font, font_bold)
+    draw_prompt(draw, 1, font, font_bold)
+    draw.text((XPAD+100, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
+    draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
+    frames += snapshot(HOLD * 2)
+
+    # ── Phase 2: clear
+    img, draw = new_frame(font, font_bold)
+    draw_prompt(draw, 1, font, font_bold)
+    draw.text((XPAD+100, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
+    draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
+    draw_prompt(draw, 5, font, font_bold)
+    frames += snapshot(HOLD)
+
+    clear_cmd = "clear"
+    typed = ""
+    for ch in clear_cmd:
+        typed += ch
+        img, draw = new_frame(font, font_bold)
+        draw_prompt(draw, 1, font, font_bold)
+        draw.text((XPAD+100, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
+        draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
+        draw_prompt(draw, 5, font, font_bold)
+        draw.text((XPAD+100, row_y(5)), typed, font=font, fill=GREEN_C)
+        frames += snapshot(TYPE)
+
+    frames += snapshot(HOLD)
+    # Screen wipes — blank frame
+    img, draw = new_frame(font, font_bold)
+    frames += snapshot(HOLD)
+
+    # ── Phase 3: fetch
+    fetch_cmd = "fetch.sh -u barkinkctp"
+
+    img, draw = new_frame(font, font_bold)
+    draw_prompt(draw, 1, font, font_bold)
+    frames += snapshot(HOLD)
+
+    typed = ""
+    for ch in fetch_cmd:
+        typed += ch
+        img, draw = new_frame(font, font_bold)
+        draw_prompt(draw, 1, font, font_bold)
+        # red while typing, green once complete
+        color = GREEN_C if typed == fetch_cmd else "#ff6b6b"
+        draw.text((XPAD+100, row_y(1)), typed, font=font, fill=color)
+        draw_cursor(draw, 1, col_offset=int(font.getlength(typed)))
+        frames += snapshot(TYPE)
+
+    frames += snapshot(HOLD)
+
+    # Phase 4: neofetch output lines appear one by one
+    visible_lines = []
+    for line_segs in neofetch:
+        visible_lines.append(line_segs)
+        img, draw = new_frame(font, font_bold)
+        draw_prompt(draw, 1, font, font_bold)
+        draw.text((XPAD+100, row_y(1)), fetch_cmd, font=font, fill=GREEN_C)
+        row = 3
+        for segs in visible_lines:
+            x = XPAD
+            y = row_y(row)
+            for text, color, bold in segs:
+                f = font_bold if bold else font
+                draw.text((x, y), text, font=f, fill=color)
+                x += int(f.getlength(text))
+            row += 1
+        frames += snapshot(HOLD)
+
+    # Phase 5: closing prompt + cursor blink
+    closing_row = 3 + len(neofetch) + 1
+    sep_row     = closing_row - 1
+
+    for blink in range(6):
+        img, draw = new_frame(font, font_bold)
+        draw_prompt(draw, 1, font, font_bold)
+        draw.text((XPAD+100, row_y(1)), fetch_cmd, font=font, fill=GREEN_C)
+        row = 3
+        for segs in neofetch:
+            x = XPAD
+            for text, color, bold in segs:
+                f = font_bold if bold else font
+                draw.text((x, row_y(row)), text, font=f, fill=color)
+                x += int(f.getlength(text))
+            row += 1
+        draw.text((XPAD, row_y(sep_row)), "─"*42, font=font, fill=SEP_C)
+        draw_prompt(draw, closing_row, font, font_bold)
+        if blink % 2 == 0:
+            draw_cursor(draw, closing_row)
+        frames += snapshot(HOLD)
+
+    # Phase 6: clear at end
+    typed = ""
+    for ch in clear_cmd:
+        typed += ch
+        img, draw = new_frame(font, font_bold)
+        draw_prompt(draw, 1, font, font_bold)
+        draw.text((XPAD+100, row_y(1)), fetch_cmd, font=font, fill=GREEN_C)
+        row = 3
+        for segs in neofetch:
+            x = XPAD
+            for text, color, bold in segs:
+                f = font_bold if bold else font
+                draw.text((x, row_y(row)), text, font=f, fill=color)
+                x += int(f.getlength(text))
+            row += 1
+        draw.text((XPAD, row_y(sep_row)), "─"*42, font=font, fill=SEP_C)
+        draw_prompt(draw, closing_row, font, font_bold)
+        draw.text((XPAD+100, row_y(closing_row)), typed, font=font, fill=GREEN_C)
+        frames += snapshot(TYPE)
+
+    frames += snapshot(HOLD)
+
+    # Blank pause before loop
+    img, draw = new_frame(font, font_bold)
+    frames += snapshot(HOLD * 3)
+
+    return frames
 
 def main():
-    t = gifos.Terminal(620, 420, 12, 12, FONT_FILE_BITMAP, 15)
-
+    token = os.environ.get("GITHUB_TOKEN", "")
     now = datetime.now(ZoneInfo("Europe/Istanbul"))
     years_exp = now.year - START_YEAR
-    year_now = now.strftime("%Y")
     time_now = now.strftime("%a %b %d %I:%M:%S %p %Z %Y")
-    token = os.environ.get("GITHUB_TOKEN", "") ## Using the GitHub token created by Github Actions (Not PAT)
 
-    # ── Fetch GitHub stats ─────────────────────────────────────────────────────
-    github_stats = gifos.utils.fetch_github_stats("BarkinKctp")
-    _exclude = {"CSS", "Jupyter Notebook", "TypeScript", "HTML", "Shell", "Makefile"}
-    top_languages = [lang[0] for lang in github_stats.languages_sorted if lang[0] not in _exclude]
     try:
-        current_streak, longest_streak = fetch_streaks("BarkinKctp", token)
-    except Exception:
-        current_streak, longest_streak = "?", "?"
+        stats = fetch_stats(token, now.year)
+    except Exception as e:
+        print(f"WARN: stats fetch failed — {e}")
+        stats = {
+            "top_langs": "N/A", "last_year_commits": "?", "commit_year": now.year - 1,
+            "total_contribs": "?", "current_streak": "?", "longest_streak": "?",
+        }
 
-    user_details = f"""
-\x1b[30;101mbarkinkctp@GitHub\x1b[0m
------------------
-\x1b[96mRole:        \x1b[93mEngineer - DevOps / Cloud\x1b[0m
-\x1b[96mFocus:       \x1b[93mPlatform automation · CI/CD · IaC\x1b[0m
-\x1b[96mStack:       \x1b[93mCloud · K8s · Docker · Terraform\x1b[0m
-\x1b[96mExp:         \x1b[93m{years_exp}+ years\x1b[0m
+    print(f"INFO: building frames — {stats}")
+    frames = build_frames(stats, years_exp)
 
-\x1b[30;101mGitHub Stats:\x1b[0m
------------------
-\x1b[96mRating:      \x1b[93m{github_stats.user_rank.level}\x1b[0m
-\x1b[96mContributions:    \x1b[93m{github_stats.total_repo_contributions}\x1b[0m
-\x1b[96mCommits ({year_now}): \x1b[93m{github_stats.total_commits_last_year}\x1b[0m
-\x1b[96mStreak:      \x1b[93m{current_streak}d\x1b[96m  |  Longest: \x1b[93m{longest_streak}d\x1b[0m
-\x1b[96mLanguages:   \x1b[93m{', '.join(top_languages[:5])}\x1b[0m
-
-\x1b[30;101mContact:\x1b[0m
------------------
-\x1b[96mLinkedIn:    \x1b[93mBarkin-Kocatepe\x1b[0m
-"""
-
-    # Sequence
-
-    # 1. echo "Hi, I'm Barkin Kocatepe"
-    t.gen_prompt(1, count=8)
-    t.toggle_show_cursor(True)
-    t.gen_typing_text('echo "Hi, I\'m Barkin Kocatepe"', 1, contin=True)
-    t.toggle_show_cursor(False)
-    t.gen_text("\x1b[93mHi, I'm Barkin Kocatepe\x1b[0m", 3, count=15)
-
-    # 2. clear before fetch
-    t.gen_prompt(5, count=8)
-    prompt_col = t.curr_col
-    t.clone_frame(8)
-    t.toggle_show_cursor(True)
-    t.gen_typing_text("\x1b[91mclea", 5, contin=True)
-    t.delete_row(5, prompt_col)
-    t.gen_text("\x1b[92mclear\x1b[0m", 5, count=8, contin=True)
-    t.toggle_show_cursor(False)
-    t.gen_text("", 1, count=5)
-
-    # 3. fetch.sh -u barkinkctp
-    t.gen_prompt(1, count=8)
-    prompt_col = t.curr_col
-    t.toggle_show_cursor(True)
-    t.gen_typing_text("\x1b[91mfetch.s", 1, contin=True)
-    t.delete_row(1, prompt_col)
-    t.gen_text("\x1b[92mfetch.sh\x1b[0m", 1, contin=True)
-    t.gen_typing_text(" -u barkinkctp", 1, contin=True)
-    t.toggle_show_cursor(False)
-
-    # 4. Neofetch output
-    t.gen_text(user_details, 3, count=8, contin=True)
-
-    # 5. Closing prompt + clear
-    t.gen_prompt(t.curr_row + 1)
-    prompt_col = t.curr_col
-    t.clone_frame(23)
-    t.toggle_show_cursor(True)
-    t.gen_typing_text("\x1b[91mclea", t.curr_row, contin=True)
-    t.delete_row(t.curr_row, prompt_col)
-    t.gen_text("\x1b[92mclear\x1b[0m", t.curr_row, count=8, contin=True)
-    t.toggle_show_cursor(False)
-
-    # 6. Blank pause before GIF loops
-    t.gen_text("", 1, count=40)
-
-    t.gen_gif()
-    print(f"INFO: output.gif generated — {time_now} | streak: {current_streak} days | longest: {longest_streak} days")
+    frame_duration = int(1000 / FPS)  # ms per frame
+    frames[0].save(
+        "output.gif",
+        save_all=True,
+        append_images=frames[1:],
+        loop=0,
+        duration=frame_duration,
+        optimize=False,
+    )
+    print(f"INFO: output.gif saved — {len(frames)} frames — {time_now}")
 
 
 if __name__ == "__main__":
