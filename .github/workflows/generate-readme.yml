@@ -25,7 +25,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install FFmpeg
-        run: sudo apt-get install -y ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
       - name: Install github-readme-terminal
         run: pip install github-readme-terminal
