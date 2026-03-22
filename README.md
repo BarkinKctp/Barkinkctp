@@ -4,13 +4,14 @@
 
 ---
 
-**About Me**  
--  Currently working on cloud-oriented systems, packaging, and build workflows  
--  Ask me about Azure, cloud-native development, CI/CD, and software packaging  
+### About Me
+- Currently focused on DevOps, cloud-native infrastructure, and CI/CD automation
+- Working across Azure, AWS, and GCP
+- Ask me about cloud platforms, CI/CD, Kubernetes, Docker, or Terraform
 
 ---
 
-**Languages & Tools**
+### Languages & Tools
 
 <p align="left">
   <img src="https://skillicons.dev/icons?i=python,cs,js,ts,react,nextjs,dotnet,postgres,mongodb,azure" /><br/>
@@ -20,31 +21,8 @@
 
 ---
 
-🌐 <strong>Socials</strong>
+### Connect
 
-<p align="left">
-  <a href="https://www.linkedin.com/in/barkin-kocatepe-6a43922a2" target="_blank">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" height="32" />
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://learn.microsoft.com/en-us/users/barknkocatepe-1367/" target="_blank">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" height="32" />
-  </a>
-</p>
+[LinkedIn — barkin-kocatepe](https://www.linkedin.com/in/barkin-kocatepe-6a43922a2)
 
 
-
-<!--
-**BarkinKctp/Barkinkctp** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
