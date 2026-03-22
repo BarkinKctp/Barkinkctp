@@ -80,7 +80,8 @@ def main():
 
     # ── Fetch GitHub stats ─────────────────────────────────────────────────────
     github_stats = gifos.utils.fetch_github_stats("BarkinKctp")
-    top_languages = [lang[0] for lang in github_stats.languages_sorted]
+    _exclude = {"CSS", "Jupyter Notebook", "TypeScript", "HTML", "Shell", "Makefile"}
+    top_languages = [lang[0] for lang in github_stats.languages_sorted if lang[0] not in _exclude]
     try:
         current_streak, longest_streak = fetch_streaks("BarkinKctp", token)
     except Exception:
@@ -97,50 +98,61 @@ def main():
 \x1b[30;101mGitHub Stats:\x1b[0m
 -----------------
 \x1b[96mRating:      \x1b[93m{github_stats.user_rank.level}\x1b[0m
-\x1b[96mCommits ({int(year_now) - 1}): \x1b[93m{github_stats.total_commits_last_year}\x1b[0m
-\x1b[96mContribs:    \x1b[93m{github_stats.total_repo_contributions}\x1b[0m
-\x1b[96mStreak:  \x1b[93m{current_streak}d\x1b[96m  |  Longest:  \x1b[93m{longest_streak}d\x1b[0m
+\x1b[96mContributions:    \x1b[93m{github_stats.total_repo_contributions}\x1b[0m
+\x1b[96mCommits ({year_now}): \x1b[93m{github_stats.total_commits_last_year}\x1b[0m
+\x1b[96mStreak:      \x1b[93m{current_streak}d\x1b[96m  |  Longest: \x1b[93m{longest_streak}d\x1b[0m
 \x1b[96mLanguages:   \x1b[93m{', '.join(top_languages[:5])}\x1b[0m
 
 \x1b[30;101mContact:\x1b[0m
 -----------------
-\x1b[96mLinkedIn:    \x1b[93min/Barkin-Kocatepe\x1b[0m
+\x1b[96mLinkedIn:    \x1b[93mBarkin-Kocatepe\x1b[0m
 """
 
     # Sequence
 
     # 1. echo "Hi, I'm Barkin Kocatepe"
-    t.gen_prompt(1, count=5)
+    t.gen_prompt(1, count=8)
     t.toggle_show_cursor(True)
     t.gen_typing_text('echo "Hi, I\'m Barkin Kocatepe"', 1, contin=True)
     t.toggle_show_cursor(False)
-    t.gen_text("\x1b[93mHi, I'm Barkin Kocatepe\x1b[0m", 3, count=10)
+    t.gen_text("\x1b[93mHi, I'm Barkin Kocatepe\x1b[0m", 3, count=15)
 
-    # 2. fetch.sh -u barkinkctp  
-    t.gen_prompt(5, count=5)
+    # 2. clear before fetch
+    t.gen_prompt(5, count=8)
+    prompt_col = t.curr_col
+    t.clone_frame(8)
+    t.toggle_show_cursor(True)
+    t.gen_typing_text("\x1b[91mclea", 5, contin=True)
+    t.delete_row(5, prompt_col)
+    t.gen_text("\x1b[92mclear\x1b[0m", 5, count=8, contin=True)
+    t.toggle_show_cursor(False)
+    t.gen_text("", 1, count=5)
+
+    # 3. fetch.sh -u barkinkctp
+    t.gen_prompt(1, count=8)
     prompt_col = t.curr_col
     t.toggle_show_cursor(True)
-    t.gen_typing_text("\x1b[91mfetch.s", 5, contin=True)
-    t.delete_row(5, prompt_col)
-    t.gen_text("\x1b[92mfetch.sh\x1b[0m", 5, contin=True)
-    t.gen_typing_text(" -u barkinkctp", 5, contin=True)
+    t.gen_typing_text("\x1b[91mfetch.s", 1, contin=True)
+    t.delete_row(1, prompt_col)
+    t.gen_text("\x1b[92mfetch.sh\x1b[0m", 1, contin=True)
+    t.gen_typing_text(" -u barkinkctp", 1, contin=True)
     t.toggle_show_cursor(False)
 
-    # 3. Neofetch output
-    t.gen_text(user_details, 7, count=5, contin=True)
+    # 4. Neofetch output
+    t.gen_text(user_details, 3, count=8, contin=True)
 
-    # 4. Closing prompt + clear
+    # 5. Closing prompt + clear
     t.gen_prompt(t.curr_row + 1)
     prompt_col = t.curr_col
-    t.clone_frame(15)
+    t.clone_frame(23)
     t.toggle_show_cursor(True)
     t.gen_typing_text("\x1b[91mclea", t.curr_row, contin=True)
     t.delete_row(t.curr_row, prompt_col)
-    t.gen_text("\x1b[92mclear\x1b[0m", t.curr_row, count=5, contin=True)
+    t.gen_text("\x1b[92mclear\x1b[0m", t.curr_row, count=8, contin=True)
     t.toggle_show_cursor(False)
 
-    # 5. Blank pause before GIF loops
-    t.gen_text("", 1, count=30)
+    # 6. Blank pause before GIF loops
+    t.gen_text("", 1, count=40)
 
     t.gen_gif()
     print(f"INFO: output.gif generated — {time_now} | streak: {current_streak} days | longest: {longest_streak} days")

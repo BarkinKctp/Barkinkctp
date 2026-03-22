@@ -26,4 +26,6 @@
 
 <br/>
 
-<img src="output.gif" alt="terminal" />
+<div align="center">
+  <img src="output.gif" alt="terminal" width="450" />
+</div>

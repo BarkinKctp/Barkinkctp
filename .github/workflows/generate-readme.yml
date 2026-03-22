@@ -30,6 +30,15 @@ jobs:
       - name: Install github-readme-terminal
         run: pip install github-readme-terminal
 
+      - name: Configure gifos
+        run: |
+          mkdir -p ~/.config/gifos
+          cat > ~/.config/gifos/gifos_settings.toml << 'EOF'
+          [general]
+          user_name = "Barkin@dev"
+          color_scheme = "nord"
+          EOF
+
       - name: Generate terminal GIF
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
