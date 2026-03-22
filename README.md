@@ -5,9 +5,9 @@
 ---
 
 ### About Me
-- Currently focused on DevOps, cloud-native infrastructure, and CI/CD automation
-- Working across Azure, AWS, and GCP
-- Ask me about cloud platforms, CI/CD, Kubernetes, Docker, or Terraform
+
+- Focused on DevOps, cloud-native infrastructure, and CI/CD automation
+- Working across Azure, AWS, and GCP with Kubernetes, Docker, and Terraform
 
 ---
 
@@ -18,11 +18,12 @@
 <img src="https://skillicons.dev/icons?i=aws,gcp,docker,kubernetes,terraform,jenkins,githubactions,linux,bash,git" />
 </p>
 
-
 ---
 
 ### Connect
 
-[LinkedIn — barkin-kocatepe](https://www.linkedin.com/in/barkin-kocatepe-6a43922a2)
+[LinkedIn — Barkin Kocatepe](https://www.linkedin.com/in/barkin-kocatepe-6a43922a2)
 
+<br/>
 
+<img src="output.gif" alt="terminal" />

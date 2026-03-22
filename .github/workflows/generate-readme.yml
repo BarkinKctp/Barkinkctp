@@ -1,0 +1,44 @@
+name: Generate terminal GIF
+
+on:
+  schedule:
+    - cron: "0 10 * * *" 
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install FFmpeg
+        run: sudo apt-get install -y ffmpeg
+
+      - name: Install github-readme-terminal
+        run: pip install github-readme-terminal
+
+      - name: Generate terminal GIF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python main.py
+
+      - name: Commit and push output.gif
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output.gif
+          git diff --cached --quiet || git commit -m "chore: update terminal GIF [skip ci]"
+          git push
