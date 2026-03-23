@@ -14,8 +14,6 @@
 
 ### Connect:
 
----
-
 <h4><a href="https://www.linkedin.com/in/barkin-kocatepe-6a43922a2" target="_blank">LinkedIn - Barkin Kocatepe</a></h4>
 <h4><a href="mailto:barkinkocatepe12@gmail.com" target="_blank">Email - barkinkocatepe12@gmail.com</a></h4>
 
@@ -33,5 +31,5 @@
 ---
 
 <p align="center">
-  <img src="output.gif" alt="terminal" width="720" height="500" />
+  <img src="output.gif" alt="terminal" width="720" height="520" />
 </p>

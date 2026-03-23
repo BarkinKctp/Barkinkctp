@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 USERNAME = "BarkinKctp"
 START_YEAR = 2024
 FPS = 15
-W, H       = 720, 500
+W, H       = 720, 520
 XPAD, YPAD = 16, 38
 LINE_H     = 18
 FONT_SIZE = 13
@@ -19,7 +19,7 @@ BORDER    = "#454545"
 PROMPT_C  = "#58a6ff"   # blue
 DIM_C     = "#8b949e"   # gray
 GREEN_C   = "#3fb950"   # green
-YELLOW_C  = "#e3b341"   # yellow
+WHITE_C   = "#e6edf3"   # white
 LABEL_C   = "#58a6ff"   # blue
 VALUE_C   = "#e6edf3"   # white
 SEP_C     = "#30363d"   # dark gray
@@ -38,22 +38,6 @@ def fetch_json(method: str, url: str, **kwargs) -> dict | list:
 def fetch_stats(token: str, current_year: int) -> dict:
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"}
 
-    repos = fetch_json(
-        "GET",
-        f"https://api.github.com/users/{USERNAME}/repos?per_page=100&type=owner",
-        headers=headers,
-    )
-
-    _exclude = {"CSS", "Jupyter Notebook", "TypeScript", "HTML", "Makefile"}
-    lang_bytes: dict[str, int] = {}
-    for repo in repos:
-        if not isinstance(repo, dict) or repo.get("fork"):
-            continue
-        lang = repo.get("language")
-        if lang and lang not in _exclude:
-            lang_bytes[lang] = lang_bytes.get(lang, 0) + (repo.get("size") or 0)
-    top_langs = ", ".join(sorted(lang_bytes, key=lambda l: lang_bytes[l], reverse=True)[:5]) or "N/A"
-
     commit_year = current_year - 1
     commits_resp = fetch_json(
         "GET",
@@ -66,13 +50,25 @@ def fetch_stats(token: str, current_year: int) -> dict:
         "POST",
         "https://api.github.com/graphql",
         json={
-            "query": """query($login:String!){user(login:$login){contributionsCollection{contributionCalendar{totalContributions weeks{contributionDays{contributionCount date}}}}}}""",
+            "query": """query($login:String!){user(login:$login){
+  contributionsCollection{contributionCalendar{totalContributions weeks{contributionDays{contributionCount date}}}}
+  repositories(first:100 ownerAffiliations:OWNER isFork:false){nodes{languages(first:5 orderBy:{field:SIZE direction:DESC}){edges{size node{name}}}}}
+}}""",
             "variables": {"login": USERNAME},
         },
         headers={"Authorization": f"Bearer {token}"},
     )
     if "errors" in gql:
         raise ValueError(gql["errors"])
+
+    _exclude = {"CSS", "Jupyter Notebook", "TypeScript", "HTML", "Makefile","PowerShell"}
+    lang_bytes: dict[str, int] = {}
+    for repo in gql["data"]["user"]["repositories"]["nodes"]:
+        for edge in repo["languages"]["edges"]:
+            name = edge["node"]["name"]
+            if name not in _exclude:
+                lang_bytes[name] = lang_bytes.get(name, 0) + edge["size"]
+    top_langs = ", ".join(sorted(lang_bytes, key=lambda l: lang_bytes[l], reverse=True)[:3]) or "N/A"
 
     cal = gql["data"]["user"]["contributionsCollection"]["contributionCalendar"]
     days = sorted([d for w in cal["weeks"] for d in w["contributionDays"]], key=lambda d: d["date"])
@@ -126,13 +122,17 @@ def new_frame(font, font_bold):
     img  = Image.new("RGB", (W, H), BG)
     draw = ImageDraw.Draw(img)
     #Border
-    draw.rounded_rectangle([0, 0, W-1, H-1], radius=8, outline=BORDER, width=2)  
+    draw.rounded_rectangle([0, 0, W-1, 28], radius=8, fill="#1c1c1c") 
     # Title bar dots
+    draw.rectangle([0, 20, W-1, 28], fill="#1c1c1c")
+
+    draw.rounded_rectangle([0, 0, W-1, H-1], radius=8, outline=BORDER, width=2)
+
     draw.ellipse([13, 11, 24, 22], fill=RED_C)
     draw.ellipse([30, 11, 41, 22], fill=ORANGE_C)
     draw.ellipse([47, 11, 58, 22], fill=DOT_G)
     # Title bar separator
-    draw.line([(0, 28), (W, 28)], fill="#333333", width=2)
+    draw.line([(2, 28), (W-2, 28)], fill="#333333", width=2)
     return img, draw
 
 def row_y(row):
@@ -172,11 +172,11 @@ def build_frames(stats: dict, years_exp: int):
         # separator
         [(f"{'─'*42}", SEP_C, False)],
         # header
-        [("Barkinkctp", LABEL_C, True), ("@", DIM_C, False), ("github", LABEL_C, True)],
+        [("barkinkctp", LABEL_C, True), ("@", DIM_C, False), ("github", LABEL_C, True)],
         # sep2
         [("─"*14, SEP_C, False)],
         # info
-        [("Role:   ", LABEL_C, True), ("Engineer - DevOps / Cloud", VALUE_C, False)],
+        [("Role:   ", LABEL_C, True), ("DevOps / Cloud", VALUE_C, False)],
         [("Focus:  ", LABEL_C, True), ("Platform automation · CI/CD · IaC", VALUE_C, False)],
         [("Stack:  ", LABEL_C, True), ("Cloud · K8s · Docker · Terraform", VALUE_C, False)],
         [("Exp:    ", LABEL_C, True), (f"{years_exp}+ years", VALUE_C, False)],
@@ -225,14 +225,14 @@ def build_frames(stats: dict, years_exp: int):
     img, draw = new_frame(font, font_bold)
     draw_prompt(draw, 1, font, font_bold)
     draw.text((cmd_x, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
-    draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
+    draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=WHITE_C)
     frames += snapshot(HOLD * 4)
 
     # ── Phase 2: clear
     img, draw = new_frame(font, font_bold)
     draw_prompt(draw, 1, font, font_bold)
     draw.text((cmd_x, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
-    draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
+    draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=WHITE_C)
     draw_prompt(draw, 5, font, font_bold)
     frames += snapshot(HOLD)
 
@@ -243,7 +243,7 @@ def build_frames(stats: dict, years_exp: int):
         img, draw = new_frame(font, font_bold)
         draw_prompt(draw, 1, font, font_bold)
         draw.text((cmd_x, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
-        draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
+        draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=WHITE_C)
         draw_prompt(draw, 5, font, font_bold)
         draw.text((cmd_x, row_y(5)), typed, font=font, fill=GREEN_C)
         frames += snapshot(TYPE)
@@ -254,7 +254,7 @@ def build_frames(stats: dict, years_exp: int):
     frames += snapshot(HOLD)
 
     # ── Phase 3: fetch
-    fetch_cmd = "fetch.sh -u barkinkctp"
+    fetch_cmd = "./users/barkinkctp.sh"
 
     img, draw = new_frame(font, font_bold)
     draw_prompt(draw, 1, font, font_bold)
