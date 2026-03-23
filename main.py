@@ -9,13 +9,13 @@ from PIL import Image, ImageDraw, ImageFont
 USERNAME = "BarkinKctp"
 START_YEAR = 2024
 FPS = 15
-W, H       = 620, 480
+W, H       = 720, 500
 XPAD, YPAD = 16, 38
-LINE_H     = 16
+LINE_H     = 18
 FONT_SIZE = 13
 
-BG        = "#0d1117"
-BORDER    = "#30363d"
+BG        = "#0a0a0a"   
+BORDER    = "#454545"  
 PROMPT_C  = "#58a6ff"   # blue
 DIM_C     = "#8b949e"   # gray
 GREEN_C   = "#3fb950"   # green
@@ -125,14 +125,14 @@ def load_font_bold(size=FONT_SIZE):
 def new_frame(font, font_bold):
     img  = Image.new("RGB", (W, H), BG)
     draw = ImageDraw.Draw(img)
-    # Border
-    draw.rounded_rectangle([0, 0, W-1, H-1], radius=8, outline=BORDER)
+    #Border
+    draw.rounded_rectangle([0, 0, W-1, H-1], radius=8, outline=BORDER, width=2)  
     # Title bar dots
-    draw.ellipse([12, 10, 22, 20], fill=RED_C)
-    draw.ellipse([28, 10, 38, 20], fill=ORANGE_C)
-    draw.ellipse([44, 10, 54, 20], fill=DOT_G)
+    draw.ellipse([13, 11, 24, 22], fill=RED_C)
+    draw.ellipse([30, 11, 41, 22], fill=ORANGE_C)
+    draw.ellipse([47, 11, 58, 22], fill=DOT_G)
     # Title bar separator
-    draw.line([(0, 28), (W, 28)], fill=BORDER)
+    draw.line([(0, 28), (W, 28)], fill="#333333", width=2)
     return img, draw
 
 def row_y(row):
@@ -141,13 +141,14 @@ def row_y(row):
 
 def draw_prompt(draw, row, font, font_bold):
     y = row_y(row)
-    draw.text((XPAD, y),      "Barkin@dev", font=font_bold, fill=PROMPT_C)
-    draw.text((XPAD + 76, y), ":~$",        font=font,      fill=DIM_C)
+    uw = int(font_bold.getlength("barkin@dev"))
+    draw.text((XPAD, y), "barkin@dev", font=font_bold, fill=PROMPT_C)
+    draw.text((XPAD + uw, y), ":~$ ", font=font, fill=DIM_C)
+    return XPAD + uw + int(font.getlength(":~$ "))
 
-def draw_cursor(draw, row, col_offset=0):
-    y  = row_y(row)
-    x  = XPAD + 100 + col_offset
-    draw.rectangle([x, y+1, x+7, y+LINE_H-2], fill=PROMPT_C)
+def draw_cursor(draw, row, cmd_x, col_offset=0):
+    y = row_y(row)
+    draw.rectangle([cmd_x + col_offset, y+1, cmd_x + col_offset + 7, y+LINE_H-2], fill=PROMPT_C)
 
 
 # Frame builder
@@ -155,6 +156,8 @@ def build_frames(stats: dict, years_exp: int):
     font = load_font()
     font_bold = load_font_bold()
     frames = []
+    _uw = int(font_bold.getlength("barkin@dev"))
+    cmd_x = XPAD + _uw + int(font.getlength(":~$ "))
 
     def snapshot(hold_frames=1):
         """Return `hold_frames` copies of the current image."""
@@ -189,11 +192,12 @@ def build_frames(stats: dict, years_exp: int):
         [("Languages:      ", LABEL_C, True), (stats["top_langs"], VALUE_C, False)],
         # contact sep
         [("─"*14, SEP_C, False)],
-        [("Contact Me:", LABEL_C, True)],
         [("", VALUE_C, False)],
+        [("Contact Me:", LABEL_C, True)],
         [("─"*14, SEP_C, False)],
         [("LinkedIn:  ", LABEL_C, True), ("Barkin-Kocatepe", VALUE_C, False)],
         [("Email:     ", LABEL_C, True), ("barkinkocatepe12@gmail.com", VALUE_C, False)],
+        [("─"*42, SEP_C, False)],
     ]
 
     # ── Phase 1: echo
@@ -207,27 +211,27 @@ def build_frames(stats: dict, years_exp: int):
         typed += ch
         img, draw = new_frame(font, font_bold)
         draw_prompt(draw, 1, font, font_bold)
-        draw.text((XPAD+100, row_y(1)), typed, font=font, fill=GREEN_C)
-        draw_cursor(draw, 1, col_offset=int(font.getlength(typed)))
+        draw.text((cmd_x, row_y(1)), typed, font=font, fill=GREEN_C)
+        draw_cursor(draw, 1, cmd_x, col_offset=int(font.getlength(typed)))
         frames += snapshot(TYPE)
 
     # Hold echo command
     img, draw = new_frame(font, font_bold)
     draw_prompt(draw, 1, font, font_bold)
-    draw.text((XPAD+100, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
+    draw.text((cmd_x, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
     frames += snapshot(HOLD)
 
     # Show echo output
     img, draw = new_frame(font, font_bold)
     draw_prompt(draw, 1, font, font_bold)
-    draw.text((XPAD+100, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
+    draw.text((cmd_x, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
     draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
-    frames += snapshot(HOLD * 2)
+    frames += snapshot(HOLD * 4)
 
     # ── Phase 2: clear
     img, draw = new_frame(font, font_bold)
     draw_prompt(draw, 1, font, font_bold)
-    draw.text((XPAD+100, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
+    draw.text((cmd_x, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
     draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
     draw_prompt(draw, 5, font, font_bold)
     frames += snapshot(HOLD)
@@ -238,10 +242,10 @@ def build_frames(stats: dict, years_exp: int):
         typed += ch
         img, draw = new_frame(font, font_bold)
         draw_prompt(draw, 1, font, font_bold)
-        draw.text((XPAD+100, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
+        draw.text((cmd_x, row_y(1)), echo_cmd, font=font, fill=GREEN_C)
         draw.text((XPAD, row_y(3)), "Hi, I'm Barkin Kocatepe", font=font_bold, fill=YELLOW_C)
         draw_prompt(draw, 5, font, font_bold)
-        draw.text((XPAD+100, row_y(5)), typed, font=font, fill=GREEN_C)
+        draw.text((cmd_x, row_y(5)), typed, font=font, fill=GREEN_C)
         frames += snapshot(TYPE)
 
     frames += snapshot(HOLD)
@@ -263,8 +267,8 @@ def build_frames(stats: dict, years_exp: int):
         draw_prompt(draw, 1, font, font_bold)
         # red while typing, green once complete
         color = GREEN_C if typed == fetch_cmd else "#ff6b6b"
-        draw.text((XPAD+100, row_y(1)), typed, font=font, fill=color)
-        draw_cursor(draw, 1, col_offset=int(font.getlength(typed)))
+        draw.text((cmd_x, row_y(1)), typed, font=font, fill=color)
+        draw_cursor(draw, 1, cmd_x, col_offset=int(font.getlength(typed)))
         frames += snapshot(TYPE)
 
     frames += snapshot(HOLD)
@@ -275,7 +279,7 @@ def build_frames(stats: dict, years_exp: int):
         visible_lines.append(line_segs)
         img, draw = new_frame(font, font_bold)
         draw_prompt(draw, 1, font, font_bold)
-        draw.text((XPAD+100, row_y(1)), fetch_cmd, font=font, fill=GREEN_C)
+        draw.text((cmd_x, row_y(1)), fetch_cmd, font=font, fill=GREEN_C)
         row = 3
         for segs in visible_lines:
             x = XPAD
@@ -289,12 +293,10 @@ def build_frames(stats: dict, years_exp: int):
 
     # Phase 5: closing prompt + cursor blink
     closing_row = 3 + len(neofetch) + 1
-    sep_row     = closing_row - 1
 
-    for blink in range(6):
-        img, draw = new_frame(font, font_bold)
+    def draw_neofetch_and_prompt(draw, blink_cursor=False, clear_typed=""):
         draw_prompt(draw, 1, font, font_bold)
-        draw.text((XPAD+100, row_y(1)), fetch_cmd, font=font, fill=GREEN_C)
+        draw.text((cmd_x, row_y(1)), fetch_cmd, font=font, fill=GREEN_C)
         row = 3
         for segs in neofetch:
             x = XPAD
@@ -303,30 +305,26 @@ def build_frames(stats: dict, years_exp: int):
                 draw.text((x, row_y(row)), text, font=f, fill=color)
                 x += int(f.getlength(text))
             row += 1
-        draw.text((XPAD, row_y(sep_row)), "─"*42, font=font, fill=SEP_C)
         draw_prompt(draw, closing_row, font, font_bold)
-        if blink % 2 == 0:
-            draw_cursor(draw, closing_row)
+        if blink_cursor:
+            draw_cursor(draw, closing_row, cmd_x)
+        if clear_typed:
+            draw.text((cmd_x, row_y(closing_row)), clear_typed, font=font, fill=GREEN_C)
+
+    for blink in range(12):
+        img, draw = new_frame(font, font_bold)
+        draw_neofetch_and_prompt(draw, blink_cursor=(blink % 2 == 0))
         frames += snapshot(HOLD)
+
+    # Extra pause — full card visible, no blink, before clearing
+    frames += snapshot(HOLD * 6)
 
     # Phase 6: clear at end
     typed = ""
     for ch in clear_cmd:
         typed += ch
         img, draw = new_frame(font, font_bold)
-        draw_prompt(draw, 1, font, font_bold)
-        draw.text((XPAD+100, row_y(1)), fetch_cmd, font=font, fill=GREEN_C)
-        row = 3
-        for segs in neofetch:
-            x = XPAD
-            for text, color, bold in segs:
-                f = font_bold if bold else font
-                draw.text((x, row_y(row)), text, font=f, fill=color)
-                x += int(f.getlength(text))
-            row += 1
-        draw.text((XPAD, row_y(sep_row)), "─"*42, font=font, fill=SEP_C)
-        draw_prompt(draw, closing_row, font, font_bold)
-        draw.text((XPAD+100, row_y(closing_row)), typed, font=font, fill=GREEN_C)
+        draw_neofetch_and_prompt(draw, clear_typed=typed)
         frames += snapshot(TYPE)
 
     frames += snapshot(HOLD)
