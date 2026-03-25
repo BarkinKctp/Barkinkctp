@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 USERNAME = "BarkinKctp"
 START_YEAR = 2024
 FPS = 15
-W, H       = 720, 520
+W, H       = 720, 540
 XPAD, YPAD = 16, 38
 LINE_H     = 18
 FONT_SIZE = 13
@@ -27,6 +27,44 @@ RED_C     = "#ff5f57"
 ORANGE_C  = "#febc2e"
 DOT_G     = "#28c840"
 
+
+# Rank calculation 
+def exponential_cdf(x):
+    return 1 - 2 ** -x
+
+def log_normal_cdf(x):
+    return x / (1 + x)
+
+def calculate_rank(all_commits, commits, prs, issues, reviews, stars, followers):
+    COMMITS_MEDIAN = 1000 if all_commits else 250
+    COMMITS_WEIGHT = 2
+    PRS_MEDIAN = 50
+    PRS_WEIGHT = 3
+    ISSUES_MEDIAN = 25
+    ISSUES_WEIGHT = 1
+    REVIEWS_MEDIAN = 2
+    REVIEWS_WEIGHT = 1
+    STARS_MEDIAN = 50
+    STARS_WEIGHT = 4
+    FOLLOWERS_MEDIAN = 10
+    FOLLOWERS_WEIGHT = 1
+
+    TOTAL_WEIGHT = COMMITS_WEIGHT + PRS_WEIGHT + ISSUES_WEIGHT + REVIEWS_WEIGHT + STARS_WEIGHT + FOLLOWERS_WEIGHT
+    THRESHOLDS = [1, 12.5, 25, 37.5, 50, 62.5, 75, 87.5, 100]
+    LEVELS = ["S", "A+", "A", "A-", "B+", "B", "B-", "C+", "C"]
+
+    rank = 1 - (
+        COMMITS_WEIGHT * exponential_cdf(commits / COMMITS_MEDIAN) +
+        PRS_WEIGHT * exponential_cdf(prs / PRS_MEDIAN) +
+        ISSUES_WEIGHT * exponential_cdf(issues / ISSUES_MEDIAN) +
+        REVIEWS_WEIGHT * exponential_cdf(reviews / REVIEWS_MEDIAN) +
+        STARS_WEIGHT * log_normal_cdf(stars / STARS_MEDIAN) +
+        FOLLOWERS_WEIGHT * log_normal_cdf(followers / FOLLOWERS_MEDIAN)
+    ) / TOTAL_WEIGHT
+
+    percentile = rank * 100
+    level = LEVELS[next((i for i, t in enumerate(THRESHOLDS) if percentile <= t), len(THRESHOLDS) - 1)]
+    return {"level": level, "percentile": percentile}
 
 # GitHub stats
 def fetch_json(method: str, url: str, **kwargs) -> dict | list:
@@ -52,7 +90,10 @@ def fetch_stats(token: str, current_year: int) -> dict:
         json={
             "query": """query($login:String!){user(login:$login){
   contributionsCollection{contributionCalendar{totalContributions weeks{contributionDays{contributionCount date}}}}
-  repositories(first:100 ownerAffiliations:OWNER isFork:false){nodes{languages(first:5 orderBy:{field:SIZE direction:DESC}){edges{size node{name}}}}}
+  pullRequests(first:1){totalCount}
+  issues(first:1){totalCount}
+  repositories(first:100 ownerAffiliations:OWNER isFork:false){nodes{languages(first:5 orderBy:{field:SIZE direction:DESC}){edges{size node{name}}} stargazers{totalCount}}}
+  followers{totalCount}
 }}""",
             "variables": {"login": USERNAME},
         },
@@ -63,12 +104,33 @@ def fetch_stats(token: str, current_year: int) -> dict:
 
     _exclude = {"CSS", "Jupyter Notebook", "TypeScript", "HTML", "Makefile","PowerShell"}
     lang_bytes: dict[str, int] = {}
+    total_stars = 0
     for repo in gql["data"]["user"]["repositories"]["nodes"]:
+        total_stars += repo["stargazers"]["totalCount"]
         for edge in repo["languages"]["edges"]:
             name = edge["node"]["name"]
             if name not in _exclude:
                 lang_bytes[name] = lang_bytes.get(name, 0) + edge["size"]
-    top_langs = ", ".join(sorted(lang_bytes, key=lambda l: lang_bytes[l], reverse=True)[:3]) or "N/A"
+    top_langs = ", ".join(sorted(lang_bytes, key=lambda l: lang_bytes[l], reverse=True)[:6]) or "N/A"
+
+    # Extract user metrics for ranking
+    user_data = gql["data"]["user"]
+    prs = user_data["pullRequests"]["totalCount"]
+    issues = user_data["issues"]["totalCount"]
+    followers = user_data["followers"]["totalCount"]
+    reviews = 0  
+
+    # Calculate rank 
+    rank_result = calculate_rank(
+        all_commits=True,
+        commits=last_year_commits,
+        prs=prs,
+        issues=issues,
+        reviews=reviews,
+        stars=total_stars,
+        followers=followers
+    )
+    rating = rank_result["level"]
 
     cal = gql["data"]["user"]["contributionsCollection"]["contributionCalendar"]
     days = sorted([d for w in cal["weeks"] for d in w["contributionDays"]], key=lambda d: d["date"])
@@ -102,6 +164,8 @@ def fetch_stats(token: str, current_year: int) -> dict:
         "total_contribs": cal["totalContributions"],
         "current_streak": current,
         "longest_streak": longest,
+        "rating": rating,
+        "total_stars": total_stars,
     }
 
 
@@ -186,7 +250,8 @@ def build_frames(stats: dict, years_exp: int):
         [("GitHub Stats:", LABEL_C, True)],
         [("─"*14, SEP_C, False)],
         [("Contributions:  ", LABEL_C, True), (str(stats["total_contribs"]), VALUE_C, False)],
-        [("Commits:        ", LABEL_C, True), (str(stats["last_year_commits"]), VALUE_C, False), (f" ({stats['commit_year']})", DIM_C, False)],
+        [("Commits:        ", LABEL_C, True), (str(stats["last_year_commits"]), VALUE_C, False), (f" ({stats['commit_year']}) ", DIM_C, False), ("| Rating: ", DIM_C, False), (stats["rating"], VALUE_C, False)],
+        [("Stars:          ", LABEL_C, True), (str(stats["total_stars"]), VALUE_C, False)],
         [("Streak:         ", LABEL_C, True), (f"{stats['current_streak']}d", VALUE_C, False),
          ("  |  Longest: ",  DIM_C,   False), (f"{stats['longest_streak']}d", VALUE_C, False)],
         [("Languages:      ", LABEL_C, True), (stats["top_langs"], VALUE_C, False)],
@@ -348,6 +413,7 @@ def main():
         stats = {
             "top_langs": "N/A", "last_year_commits": "?", "commit_year": now.year - 1,
             "total_contribs": "?", "current_streak": "?", "longest_streak": "?",
+            "rating": "?", "total_stars": "?",
         }
 
     print(f"INFO: building frames — {stats}")

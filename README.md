@@ -1,3 +1,5 @@
+![Profile Views](https://komarev.com/ghpvc/?username=BarkinKctp&color=blue)
+
 ## Hi 👋, I'm Barkın Kocatepe
 
 **Software Engineer | Cloud & Systems oriented**
@@ -31,5 +33,5 @@
 ---
 
 <p align="center">
-  <img src="output.gif" alt="terminal" width="720" height="520" />
+  <img src="output.gif" alt="terminal" width="720" height="540" />
 </p>
