@@ -18,11 +18,9 @@
 ---
 
 <p align="center">
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/barkin-kocatepe-6a43922a2)
-[![Website](https://img.shields.io/badge/Website-6b7280?style=for-the-badge&logo=google-chrome&logoColor=ffffff)](https://barkinkocatepedev.vercel.app)
-[![GitHub](https://img.shields.io/badge/GitHub-0d1117?style=for-the-badge&logo=github&logoColor=white)](https://github.com/BarkinKctp)
-
+  <a href="https://www.linkedin.com/in/barkin-kocatepe-6a43922a2"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+  <a href="https://barkinkocatepedev.vercel.app"><img src="https://img.shields.io/badge/Website-6b7280?style=for-the-badge&logo=google-chrome&logoColor=ffffff" alt="Website"/></a>
+  <a href="https://github.com/BarkinKctp"><img src="https://img.shields.io/badge/GitHub-0d1117?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
 </p>
 
 ---
@@ -30,8 +28,9 @@
 <div align="center">
 
 <p>
-  <img src="https://skillicons.dev/icons?i=python,cs,js,ts,react,nextjs,dotnet,postgres,mongodb,azure" /><br/>
-  <img src="https://skillicons.dev/icons?i=aws,gcp,docker,kubernetes,terraform,jenkins,githubactions,linux,bash,git" />
+  <img src="https://skillicons.dev/icons?i=azure,aws,gcp,docker,kubernetes,terraform,ansible,jenkins,gitlab,githubactions,linux" /><br/>
+  <img src="https://skillicons.dev/icons?i=python,cs,cpp,dotnet,powershell,bash,postgres,mongodb,react,git" />
+
 </p>
 
 </div>
@@ -52,9 +51,9 @@
 
 </div>
 
-<div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+<div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; align-items: center;">
   <img src="https://github-readme-stats-opal-omega-36.vercel.app/api?username=BarkinKctp&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=c9d1d9&title_color=7aa2f7" alt="GitHub Stats" />
-  <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&langs_count=6" alt="Top Languages" />
+  <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" alt="Top Languages" />
 </div>
 
 <div align="center">
