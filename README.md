@@ -15,7 +15,6 @@
   DevOps engineer and cloud architecture enthusiast building scalable infrastructure, automating CI/CD pipelines, and designing cloud-native systems across **Azure**, **AWS**, and **GCP**.
 </p>
 
-
 ---
 
 <p align="center">
@@ -25,6 +24,8 @@
 [![GitHub](https://img.shields.io/badge/GitHub-0d1117?style=for-the-badge&logo=github&logoColor=white)](https://github.com/BarkinKctp)
 
 </p>
+
+---
 
 <div align="center">
 
@@ -51,17 +52,11 @@
 
 </div>
 
-<div align="center">
-  <div style="display: inline-block; margin-right: 20px;">
-    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api?username=BarkinKctp&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=c9d1d9&title_color=7aa2f7" alt="GitHub Stats" />
-  </div>
-  <div style="display: inline-block;">
-    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&langs_count=6" alt="Top Languages" />
-  </div>
+<div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+  <img src="https://github-readme-stats-opal-omega-36.vercel.app/api?username=BarkinKctp&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=c9d1d9&title_color=7aa2f7" alt="GitHub Stats" />
+  <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&langs_count=6" alt="Top Languages" />
 </div>
 
 <div align="center">
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=BarkinKctp&theme=tokyonight&hide_border=true&background=0d1117" alt="GitHub Streak" />
 </div>
-
-

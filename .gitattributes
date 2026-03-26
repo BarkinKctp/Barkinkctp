@@ -1,5 +1,10 @@
 *.ipynb -linguist-detectable
+*.ipynb -linguist-vendored
 *.css -linguist-detectable
+*.css -linguist-vendored
 *.ts -linguist-detectable
+*.ts -linguist-vendored
 *.html -linguist-detectable
+*.html linguist-vendored
 Makefile -linguist-detectable
+Makefile linguist-vendored
