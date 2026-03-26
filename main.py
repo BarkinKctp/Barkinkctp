@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 USERNAME = "BarkinKctp"
 START_YEAR = 2024
 FPS = 15
-W, H       = 720, 540
+W, H       = 720, 550
 XPAD, YPAD = 16, 38
 LINE_H     = 18
 FONT_SIZE = 13
