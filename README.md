@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  DevOps engineer and cloud architecture enthusiast building scalable infrastructure, automating CI/CD pipelines, and designing cloud-native systems across **Azure**, **AWS**, and **GCP**.
+  DevOps engineer and cloud architecture enthusiast building scalable infrastructure, automating CI/CD pipelines, and designing cloud-native systems across <b>Azure</b>, <b>AWS</b>, and <b>GCP</b>.
 </p>
 
 ---
@@ -29,7 +29,7 @@
 
 <p>
   <img src="https://skillicons.dev/icons?i=azure,aws,gcp,docker,kubernetes,terraform,ansible,jenkins,gitlab,githubactions,linux" /><br/>
-  <img src="https://skillicons.dev/icons?i=python,cs,cpp,dotnet,powershell,bash,postgres,mongodb,react,git" />
+  <img src="https://skillicons.dev/icons?i=python,cs,cpp,dotnet,bash,postgres,mongodb,react" />
 
 </p>
 
@@ -40,7 +40,7 @@
 ## My Terminal
 
 <p align="center">
-  <img src="output.gif" alt="terminal" width="720" height="550" />
+  <img src="output.gif" alt="terminal" width="720" height="520" />
 </p>
 
 ---
