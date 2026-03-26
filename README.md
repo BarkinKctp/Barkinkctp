@@ -11,26 +11,20 @@
   <img src="https://img.shields.io/github/followers/BarkinKctp?label=Followers&style=for-the-badge&color=0d3b66" alt="GitHub Followers" />
 </p>
 
-<div align="center">
+<p align="center">
+  DevOps engineer and cloud architecture enthusiast building scalable infrastructure, automating CI/CD pipelines, and designing cloud-native systems across **Azure**, **AWS**, and **GCP**.
+</p>
 
-
-DevOps engineer and cloud architecture enthusiast building scalable infrastructure, automating CI/CD pipelines, and designing cloud-native systems across **Azure**, **AWS**, and **GCP**.
-
-</div>
 
 ---
 
-<div align="center">
+<p align="center">
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/barkin-kocatepe-6a43922a2)
 [![Website](https://img.shields.io/badge/Website-6b7280?style=for-the-badge&logo=google-chrome&logoColor=ffffff)](https://barkinkocatepedev.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-0d1117?style=for-the-badge&logo=github&logoColor=white)](https://github.com/BarkinKctp)
 
-</div>
-
----
-
-## Skills
+</p>
 
 <div align="center">
 
@@ -59,10 +53,10 @@ DevOps engineer and cloud architecture enthusiast building scalable infrastructu
 
 <div align="center">
   <div style="display: inline-block; margin-right: 20px;">
-    <img src="https://github-readme-stats.vercel.app/api?username=BarkinKctp&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=c9d1d9&title_color=0d3b66" alt="GitHub Stats" />
+    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api?username=BarkinKctp&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=c9d1d9&title_color=7aa2f7" alt="GitHub Stats" />
   </div>
   <div style="display: inline-block;">
-    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=c9d1d9&title_color=0d3b66&layout=compact" alt="Top Languages" />
+    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&langs_count=6" alt="Top Languages" />
   </div>
 </div>
 

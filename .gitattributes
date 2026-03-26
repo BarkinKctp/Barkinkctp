@@ -1,0 +1,5 @@
+*.ipynb -linguist-detectable
+*.css -linguist-detectable
+*.ts -linguist-detectable
+*.html -linguist-detectable
+Makefile -linguist-detectable

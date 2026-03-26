@@ -102,7 +102,7 @@ def fetch_stats(token: str, current_year: int) -> dict:
     if "errors" in gql:
         raise ValueError(gql["errors"])
 
-    _exclude = {"CSS", "Jupyter Notebook", "TypeScript", "HTML", "Makefile","PowerShell"}
+    _exclude = {"CSS", "Jupyter Notebook", "TypeScript", "HTML", "Makefile"}
     lang_bytes: dict[str, int] = {}
     total_stars = 0
     for repo in gql["data"]["user"]["repositories"]["nodes"]:
