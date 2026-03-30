@@ -18,9 +18,9 @@
 ---
 
 <p align="center">
-  <a href="https://www.linkedin.com/in/barkin-kocatepe-6a43922a2"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
-  <a href="https://barkinkocatepedev.vercel.app"><img src="https://img.shields.io/badge/Website-6b7280?style=for-the-badge&logo=google-chrome&logoColor=ffffff" alt="Website"/></a>
-  <a href="https://github.com/BarkinKctp"><img src="https://img.shields.io/badge/GitHub-0d1117?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+  <a href="https://www.linkedin.com/in/barkin-kocatepe-6a43922a2" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+  <a href="https://barkinkocatepedev.vercel.app" target="_blank"><img src="https://img.shields.io/badge/Website-6b7280?style=for-the-badge&logo=google-chrome&logoColor=ffffff" alt="Website"/></a>
+  <a href="mailto:barkinkocatepe12@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Email-D32F2F?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/></a>
 </p>
 
 ---
