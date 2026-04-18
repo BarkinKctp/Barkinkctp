@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0078D4&height=200&section=header&text=Barkın%20Kocatepe&fontSize=50&fontColor=fff&animation=twinkling&fontAlignY=35" alt="Header"/>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0078D4&height=200&section=header&text=Barkın%20Kocatepe&fontSize=50&fontColor=fff&animation=twinkling&fontAlignY=35" alt="Waving header with Barkın Kocatepe"/>
 </p>
 
 <h1 align="center">
@@ -7,8 +7,8 @@
 </h1>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=BarkinKctp&label=Profile%20Views&color=0d3b66&style=for-the-badge" alt="Profile Views" />
-  <img src="https://img.shields.io/github/followers/BarkinKctp?label=Followers&style=for-the-badge&color=0d3b66" alt="GitHub Followers" />
+  <img src="https://komarev.com/ghpvc/?username=BarkinKctp&label=Profile%20Views&color=0d3b66&style=for-the-badge" alt="GitHub profile views counter" />
+  <img src="https://img.shields.io/github/followers/BarkinKctp?label=Followers&style=for-the-badge&color=0d3b66" alt="GitHub followers badge" />
 </p>
 
 <p align="center">
@@ -28,8 +28,8 @@
 <div align="center">
 
 <p>
-  <img src="https://skillicons.dev/icons?i=azure,aws,gcp,docker,kubernetes,terraform,ansible,jenkins,gitlab,githubactions,linux" /><br/>
-  <img src="https://skillicons.dev/icons?i=python,cs,cpp,dotnet,bash,postgres,mongodb,react" />
+  <img src="https://skillicons.dev/icons?i=azure,aws,gcp,docker,kubernetes,ansible,jenkins,githubactions,linux" /><br/>
+  <img src="https://skillicons.dev/icons?i=python,cpp,dotnet,terraform,powershell,bash,postgres,nextjs" />
 
 </p>
 
@@ -52,10 +52,39 @@
 </div>
 
 <div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; align-items: center;">
-  <img src="https://github-readme-stats-opal-omega-36.vercel.app/api?username=BarkinKctp&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=c9d1d9&title_color=7aa2f7" alt="GitHub Stats" />
-  <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" alt="Top Languages" />
+
+  <picture>
+    <source 
+      srcset="https://github-readme-stats-opal-omega-36.vercel.app/api?username=BarkinKctp&show_icons=true&theme=default&hide_border=true&bg_color=ffffff&text_color=24292f&title_color=0969da" 
+      media="(prefers-color-scheme: light)" />
+    <source 
+      srcset="https://github-readme-stats-opal-omega-36.vercel.app/api?username=BarkinKctp&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=c9d1d9&title_color=7aa2f7" 
+      media="(prefers-color-scheme: dark)" />
+    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api?username=BarkinKctp&show_icons=true" />
+  </picture>
+
+  <picture>
+    <source 
+      srcset="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=default&hide_border=true&bg_color=ffffff&text_color=24292f&title_color=0969da&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" 
+      media="(prefers-color-scheme: light)" />
+    <source 
+      srcset="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" 
+      media="(prefers-color-scheme: dark)" />
+    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp" />
+  </picture>
+
 </div>
 
 <div align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=BarkinKctp&theme=tokyonight&hide_border=true&background=0d1117" alt="GitHub Streak" />
+
+  <picture>
+    <source 
+      srcset="https://github-readme-streak-stats.herokuapp.com/?user=BarkinKctp&theme=default&hide_border=true&background=ffffff&stroke=24292f&ring=0969da&fire=0969da&currStreakLabel=24292f" 
+      media="(prefers-color-scheme: light)" />
+    <source 
+      srcset="https://github-readme-streak-stats.herokuapp.com/?user=BarkinKctp&theme=tokyonight&hide_border=true&background=0d1117" 
+      media="(prefers-color-scheme: dark)" />
+    <img src="https://github-readme-streak-stats.herokuapp.com/?user=BarkinKctp" />
+  </picture>
+
 </div>
