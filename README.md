@@ -65,12 +65,12 @@
 
   <picture>
     <source 
-      srcset="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=default&hide_border=true&bg_color=ffffff&text_color=24292f&title_color=0969da&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" 
+      srcset="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=default&hide_border=true&bg_color=ffffff&text_color=24292f&title_color=0969da&layout=compact&hide=jupyter%20notebook%2Ccss%2Ctypescript%2Chtml%2Cmakefile&langs_count=8" 
       media="(prefers-color-scheme: light)" />
     <source 
-      srcset="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" 
+      srcset="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&hide=jupyter%20notebook%2Ccss%2Ctypescript%2Chtml%2Cmakefile&langs_count=8" 
       media="(prefers-color-scheme: dark)" />
-    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" />
+    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&layout=compact&hide=jupyter%20notebook%2Ccss%2Ctypescript%2Chtml%2Cmakefile&langs_count=8" />
   </picture>
 
 </div>
