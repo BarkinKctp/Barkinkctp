@@ -70,7 +70,7 @@
     <source 
       srcset="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&theme=tokyonight&hide_border=true&bg_color=0d1117&text_color=ffffff&title_color=7aa2f7&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" 
       media="(prefers-color-scheme: dark)" />
-    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp" />
+    <img src="https://github-readme-stats-opal-omega-36.vercel.app/api/top-langs/?username=BarkinKctp&layout=compact&hide=jupyter%20notebook,css,typescript,html,makefile&langs_count=8" />
   </picture>
 
 </div>
