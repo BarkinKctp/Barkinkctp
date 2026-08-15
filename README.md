@@ -11,10 +11,6 @@
   <img src="https://img.shields.io/github/followers/BarkinKctp?label=Followers&style=for-the-badge&color=0d3b66" alt="GitHub followers badge" />
 </p>
 
-<p align="center">
-  DevOps engineer and cloud architecture enthusiast building scalable infrastructure, automating CI/CD pipelines, and designing cloud-native systems across <b>Azure</b>, <b>AWS</b>, and <b>GCP</b>.
-</p>
-
 ---
 
 <p align="center">
