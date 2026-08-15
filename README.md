@@ -32,7 +32,7 @@
 </div>
 
 ---
-
+<!-- 
 ## My Terminal
 
 <p align="center">
@@ -42,7 +42,7 @@
 ---
 
 <div align="center">
-
+-->
 ## GitHub Stats
 
 </div>
